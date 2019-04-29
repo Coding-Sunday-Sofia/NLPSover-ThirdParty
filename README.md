@@ -1,2 +1,0 @@
-# NLPSover-ThirdParty
-NLPSover ThirdParty
