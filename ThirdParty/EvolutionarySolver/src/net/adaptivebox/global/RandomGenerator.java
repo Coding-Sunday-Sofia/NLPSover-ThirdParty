@@ -38,8 +38,9 @@ public class RandomGenerator {
 	 * This function returns a random integer number between the lowLimit and
 	 * upLimit (inclusive).
 	 *
-	 * @param lowLimit lower limits upLimit The upper limits (between which the
-	 *                 random number is to be generated)
+	 * @param lowLimit
+	 *            lower limits upLimit The upper limits (between which the
+	 *            random number is to be generated)
 	 * @return int return value Example: for find [0,1,2]
 	 */
 	public static int intRangeRandom(int lowLimit, int upLimit) {
@@ -49,17 +50,44 @@ public class RandomGenerator {
 	}
 
 	/**
-	 * This function returns a random double number between the lowLimit and upLimit
-	 * (exclusive).
+	 * This function returns a random double number between the lowLimit and
+	 * upLimit (exclusive).
 	 *
-	 * @param lowLimit lower limits upLimit The upper limits (between which the
-	 *                 random number is to be generated)
+	 * @param lowLimit
+	 *            lower limits upLimit The upper limits (between which the
+	 *            random number is to be generated)
 	 * @return double return value
 	 */
 	public static double doubleRangeRandom(double lowLimit, double upLimit) {
 		double number = lowLimit + PRNG.nextDouble() * (upLimit - lowLimit);
 
 		return number;
+	}
+
+	public static int[] randomSelection5(int size, int times) {
+		if (size < 0) {
+			size = 0;
+		}
+
+		if (times < 0) {
+			times = 0;
+		}
+
+		int[] all = new int[size];
+		for (int i = 0; i < all.length; i++) {
+			all[i] = i;
+		}
+
+		int[] indices = new int[Math.min(size, times)];
+		for (int i = 0, j, value; i < indices.length; i++) {
+			j = intRangeRandom(i, all.length - 1);
+
+			value = all[j];
+			all[j] = all[i];
+			indices[i] = all[i] = value;
+		}
+
+		return indices;
 	}
 
 	public static int[] randomSelection4(int totalSize, int times) {
