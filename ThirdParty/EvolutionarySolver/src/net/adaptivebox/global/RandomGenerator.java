@@ -78,6 +78,7 @@ public class RandomGenerator {
 			all[i] = i;
 		}
 
+		/* https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle */
 		int[] indices = new int[Math.min(size, times)];
 		for (int i = 0, j, value; i < indices.length; i++) {
 			j = intRangeRandom(i, all.length - 1);
