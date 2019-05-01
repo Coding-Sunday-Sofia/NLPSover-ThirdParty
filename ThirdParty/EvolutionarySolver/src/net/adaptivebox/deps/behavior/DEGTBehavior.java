@@ -55,12 +55,12 @@ public class DEGTBehavior extends AbsGTBehavior implements ILibEngine {
 	 *            Index of the trial vector element to be changed.
 	 * @param trialVector
 	 *            Trial vector reference.
-	 * @param globalBestVector
+	 * @param globalVector
 	 *            Global best found vector reference.
 	 * @param differenceVectors
 	 *            List of vectors used for difference delta calculation.
 	 */
-	private void crossoverAndMutation(int index, double trialVector[], double globalBestVector[],
+	private void crossoverAndMutation(int index, double trialVector[], double globalVector[],
 			BasicPoint differenceVectors[]) {
 		double delta = 0D;
 
@@ -68,37 +68,39 @@ public class DEGTBehavior extends AbsGTBehavior implements ILibEngine {
 			delta += (i % 2 == 0 ? +1D : -1D) * differenceVectors[i].getLocation()[index];
 		}
 
-		trialVector[index] = globalBestVector[index] + FACTOR * delta;
+		trialVector[index] = globalVector[index] + FACTOR * delta;
 	}
 
 	public void generateBehavior2(SearchPoint trailPoint, ProblemEncoder problemEncoder) {
-		SearchPoint gbest_t = socialLib.getGbest();
-
 		BasicPoint[] referPoints = getReferPoints();
 		int DIMENSION = problemEncoder.getDesignSpace().getDimension();
 		int guaranteeIndex = RandomGenerator.intRangeRandom(0, DIMENSION - 1);
 
+		double[] trailVector = trailPoint.getLocation();
+		double[] locaclVector = pbest_t.getLocation();
+		double[] globalVector = socialLib.getGbest().getLocation();
+		
 		/* Handle first part of the trial vector. */
 		for (int index = 0; index < guaranteeIndex; index++) {
 			if (CR <= Math.random()) {
-				trailPoint.getLocation()[index] = pbest_t.getLocation()[index];
+				trailVector[index] = locaclVector[index];
 				continue;
 			}
 
-			crossoverAndMutation(index, trailPoint.getLocation(), gbest_t.getLocation(), referPoints);
+			crossoverAndMutation(index, trailVector, globalVector, referPoints);
 		}
 
 		/* Guarantee for at least one change in the trial vector. */
-		crossoverAndMutation(guaranteeIndex, trailPoint.getLocation(), gbest_t.getLocation(), referPoints);
+		crossoverAndMutation(guaranteeIndex, trailVector, globalVector, referPoints);
 
 		/* Handle second part of the trial vector. */
 		for (int index = guaranteeIndex + 1; index < DIMENSION; index++) {
 			if (CR <= Math.random()) {
-				trailPoint.getLocation()[index] = pbest_t.getLocation()[index];
+				trailVector[index] = locaclVector[index];
 				continue;
 			}
 
-			crossoverAndMutation(index, trailPoint.getLocation(), gbest_t.getLocation(), referPoints);
+			crossoverAndMutation(index, trailVector, globalVector, referPoints);
 		}
 	}
 
